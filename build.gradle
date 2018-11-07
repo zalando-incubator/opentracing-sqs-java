@@ -1,0 +1,117 @@
+plugins {
+    id 'java-library'
+    id 'maven'
+    id 'maven-publish'
+    id 'signing'
+    id 'jacoco'
+}
+
+group 'de.zalando.opentracing'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api group: 'io.opentracing', name: 'opentracing-api', version: '0.31.0'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '1.11.383'
+    implementation group: 'software.amazon.awssdk', name: 'sqs', version: '2.0.0-preview-11'
+
+    testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.31.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+}
+
+codeCoverageReport.dependsOn {
+    subprojects*.test
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'opentracing-sqs'
+                packaging 'jar'
+                description 'opentracing-sqs is a utility library for transmitting the OpenTracing span context over SQS.'
+                url 'http://github.com/zalando/opentracing-sqs-java/'
+                inceptionYear 2018
+                organization {
+                    name 'Zalando SE'
+                    url 'https://tech.zalando.com/'
+                }
+
+                scm {
+                    url 'scm:git@github.com:zalando/opentracing-sqs-java.git'
+                    connection 'scm:git@github.com:zalando/opentracing-sqs-java.git'
+                    developerConnection 'scm:git@github.com:zalando/opentracing-sqs-java.git'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'https://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'jmhofer'
+                        name 'Joachim Hofer'
+                        email 'joachim.hofer@zalando.de'
+                        organization 'Zalando SE'
+                        organizationUrl 'https://tech.zalando.com/'
+                    }
+                }
+            }
+        }
+    }
+}
