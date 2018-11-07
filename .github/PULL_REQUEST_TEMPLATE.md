@@ -26,6 +26,3 @@ _List of tasks the reviewer must do to review the PR_
 - [ ] Tests
 - [ ] Documentation
 - [ ] CHANGELOG
-
-## Deployment Notes
-These should highlight any db migrations, feature toggles, etc.
