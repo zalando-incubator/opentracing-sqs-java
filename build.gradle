@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group 'de.zalando.opentracing'
@@ -43,6 +44,10 @@ artifacts {
 
     archives javadocJar
     archives sourcesJar
+}
+
+checkstyle {
+    configFile = new File(rootDir, "checkstyle.xml")
 }
 
 task codeCoverageReport(type: JacocoReport) {

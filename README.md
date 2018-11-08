@@ -1,5 +1,7 @@
 # opentracing-sqs-java
 
+[![Build Status](https://travis-ci.org/zalando-incubator/opentracing-sqs-java.svg?branch=master)](https://travis-ci.org/zalando-incubator/opentracing-sqs-java)
+
 A little Java utility library for simplifying instrumentation of [SQS](https://aws.amazon.com/sqs) messages 
 with [OpenTracing](http://opentracing.io/).
  
