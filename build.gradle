@@ -11,6 +11,7 @@ group 'de.zalando.opentracing'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -50,24 +51,15 @@ checkstyle {
     configFile = new File(rootDir, "checkstyle.xml")
 }
 
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
+jacocoTestReport {
     reports {
         xml.enabled true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
         html.enabled false
         csv.enabled false
     }
 }
 
-codeCoverageReport.dependsOn {
-    subprojects*.test
-}
+check.dependsOn jacocoTestReport
 
 signing {
     sign configurations.archives
