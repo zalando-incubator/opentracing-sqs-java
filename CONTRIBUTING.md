@@ -29,7 +29,7 @@ This is a rough outline of what the workflow for code contributions looks like:
 - Make commits of logical units.
 - Write good commit messages (see below).
 - Push your changes to a topic branch in your fork of the repository.
-- Submit a pull request to [zalando/opentracing-sqs-java][homepage]
+- Submit a pull request to [zalando-incubator/opentracing-sqs-java][homepage]
 - Your pull request must receive a :thumbsup: from two [maintainers](MAINTAINERS)
 
 Thanks for your contributions!
