@@ -1,4 +1,4 @@
-package de.zalando.opentracing.sqs;
+package org.zalando.opentracing.sqs;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
