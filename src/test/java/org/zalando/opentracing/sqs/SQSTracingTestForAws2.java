@@ -1,4 +1,4 @@
-package de.zalando.opentracing.sqs;
+package org.zalando.opentracing.sqs;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

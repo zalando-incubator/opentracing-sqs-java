@@ -51,7 +51,7 @@ SendMessageRequest tracedRequest = tracing.injectInto(request); // injects the c
 ```java
 SQSTracing tracing = new SQSTracing(tracer);
 
-ReceiveMessageResponse response = ... // retrieved from SQS 
+ReceiveMessageResponse response = ... // retrieved from SQS, remember to request the message attributes! 
 
 // the following works the same for ReceiveMessageResult from AWS SDK 1.0
 

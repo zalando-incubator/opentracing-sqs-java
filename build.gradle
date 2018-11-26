@@ -1,3 +1,5 @@
+import groovy.swing.SwingBuilder
+
 plugins {
     id 'java-library'
     id 'maven'
@@ -7,8 +9,8 @@ plugins {
     id 'checkstyle'
 }
 
-group 'de.zalando.opentracing'
-version '1.0-SNAPSHOT'
+group 'org.zalando.opentracing'
+version '1.0.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -32,12 +34,12 @@ tasks.withType(JavaCompile) {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from 'build/docs/javadoc'
+    from javadoc.destinationDir
 }
 
 task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
     classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 artifacts {
@@ -62,7 +64,49 @@ jacocoTestReport {
 check.dependsOn jacocoTestReport
 
 signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof Sign }) {
+        allprojects {
+            if (gradle.taskGraph.hasTask("uploadArchives")) {
+                def pass = ''
+                new SwingBuilder().edt {
+                    dialog(modal: true,
+                            title: 'Enter password',
+                            alwaysOnTop: true,
+                            resizable: false,
+                            locationRelativeTo: null, // Place dialog in center of the screen
+                            pack: true,
+                            show: true
+                    ) {
+                        vbox {
+                            label(text: "Please enter key passphrase:")
+                            input = passwordField()
+                            button(defaultButton: true, text: 'OK', actionPerformed: {
+                                pass = input.password
+                                dispose()
+                            })
+                        }
+                    }
+                }
+                ext."signing.password" = new String(pass)
+            }
+        }
+    }
+}
+
+publishing { // for local publishing
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
 }
 
 uploadArchives {
@@ -71,14 +115,16 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                if (project.hasProperty("sonatypeUsername")) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
             }
 
             pom.project {
                 name 'opentracing-sqs'
                 packaging 'jar'
                 description 'opentracing-sqs is a utility library for transmitting the OpenTracing span context over SQS.'
-                url 'http://github.com/zalando/opentracing-sqs-java/'
+                url 'http://github.com/zalando-incubator/opentracing-sqs-java/'
                 inceptionYear 2018
                 organization {
                     name 'Zalando SE'
@@ -86,9 +132,9 @@ uploadArchives {
                 }
 
                 scm {
-                    url 'scm:git@github.com:zalando/opentracing-sqs-java.git'
-                    connection 'scm:git@github.com:zalando/opentracing-sqs-java.git'
-                    developerConnection 'scm:git@github.com:zalando/opentracing-sqs-java.git'
+                    url 'scm:git@github.com:zalando-incubator/opentracing-sqs-java.git'
+                    connection 'scm:git@github.com:zalando-incubator/opentracing-sqs-java.git'
+                    developerConnection 'scm:git@github.com:zalando-incubator/opentracing-sqs-java.git'
                 }
 
                 licenses {

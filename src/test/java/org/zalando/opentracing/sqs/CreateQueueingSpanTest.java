@@ -1,4 +1,4 @@
-package de.zalando.opentracing.sqs;
+package org.zalando.opentracing.sqs;
 
 import io.opentracing.mock.MockSpan;
 import io.opentracing.mock.MockTracer;

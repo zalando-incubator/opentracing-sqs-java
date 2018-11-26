@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'maven'
+    id 'checkstyle'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    testImplementation group: 'org.zalando.opentracing', name: 'opentracing-sqs', version: '1.0.0'
+
+    testImplementation group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '1.11.383'
+    testImplementation group: 'org.elasticmq', name: 'elasticmq-rest-sqs_2.12', version: '0.14.6'
+    testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.31.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.25'
+}
+
+checkstyle {
+    configFile = new File(new File(rootDir, ".."), "checkstyle.xml")
+}

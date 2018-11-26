@@ -1,4 +1,4 @@
-package de.zalando.opentracing.sqs;
+package org.zalando.opentracing.sqs;
 
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
