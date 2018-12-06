@@ -64,9 +64,12 @@ jacocoTestReport {
 check.dependsOn jacocoTestReport
 
 signing {
-    required { gradle.taskGraph.hasTask("uploadArchives") }
     useGpgCmd()
     sign configurations.archives
+}
+
+tasks.withType(Sign) {
+    onlyIf { project.hasProperty('signing.gnupg.keyName') }
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
