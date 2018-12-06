@@ -24,20 +24,20 @@ with [OpenTracing](http://opentracing.io/).
 
 This library is published to Maven Central.
 
-You can add it as a dependency to your build, for example in Gradle via
+You can add it as a dependency to your build (check the badge above for the current version number), for example in Gradle via
 ```
-compile 'org.zalando:opentracing-sqs:1.0.0'
+compile "org.zalando:opentracing-sqs:${opentracingSqsVersion}"
 ```
 or in Maven via
 ```
 <dependency>
   <groupId>org.zalando</groupId>
   <artifactId>opentracing-sqs</artifactId>
-  <version>1.0.0</version>
+  <version>${opentracingSqsVersion}</version>
 </dependency>
 ```
 
-Please also remember to explicitly depend on either AWS SDK 1.0 or 2.0 with your project, as these dependencies 
+**Attention:** Please also remember to explicitly depend on either AWS SDK 1.0 or 2.0 with your project, as these dependencies 
 are not included transitively with this library.
  
 ## Usage
