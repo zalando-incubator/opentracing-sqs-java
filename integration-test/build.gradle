@@ -17,9 +17,9 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    testImplementation group: 'org.zalando.opentracing', name: 'opentracing-sqs', version: '1.0.0'
+    testImplementation group: 'org.zalando', name: 'opentracing-sqs', version: '1.0.1'
 
-    testImplementation group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '1.11.383'
+    testImplementation group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '1.11.464'
     testImplementation group: 'org.elasticmq', name: 'elasticmq-rest-sqs_2.12', version: '0.14.6'
     testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.31.0'
     testImplementation group: 'junit', name: 'junit', version: '4.12'

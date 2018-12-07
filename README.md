@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/zalando-incubator/opentracing-sqs-java.svg?branch=master)](https://travis-ci.org/zalando-incubator/opentracing-sqs-java)
 [![codecov.io](https://codecov.io/github/zalando-incubator/opentracing-sqs-java/coverage.svg?branch=master)](https://codecov.io/github/zalando-incubator/opentracing-sqs-java?branch=master)
+[![Maven Central](https://img.shields.io/maven-central/v/org.zalando/opentracing-sqs.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/opentracing-sqs)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A little Java utility library for simplifying instrumentation of [SQS](https://aws.amazon.com/sqs) messages 
 with [OpenTracing](http://opentracing.io/).
@@ -20,14 +22,26 @@ with [OpenTracing](http://opentracing.io/).
 
 ## Installation
 
-*To Do:* The library is not published anywhere yet. This will be done asap.
+This library is published to Maven Central.
 
-For now, please clone and publish locally via:
+You can add it as a dependency to your build (check the badge above for the current version number), for example in Gradle via
+```groovy
+compile "org.zalando:opentracing-sqs:${opentracingSqsVersion}"
 ```
-./gradlew publishToMavenLocal
+or in Maven via
+```xml
+<dependency>
+  <groupId>org.zalando</groupId>
+  <artifactId>opentracing-sqs</artifactId>
+  <version>${opentracingSqsVersion}</version>
+</dependency>
+```
+or in SBT via
+```scala
+libraryDependencies += "org.zalando" % "opentracing-sqs" % opentracingSqsVersion
 ```
 
-Please also remember to explicitly depend on either AWS SDK 1.0 or 2.0 with your project, as these dependencies 
+**Attention:** Please also remember to explicitly depend on either AWS SDK 1.0 or 2.0 with your project, as these dependencies 
 are not included transitively with this library.
  
 ## Usage
