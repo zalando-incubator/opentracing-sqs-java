@@ -24,7 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.opentracing.References.FOLLOWS_FROM;
-import static io.opentracing.propagation.Format.Builtin.TEXT_MAP;
+import static io.opentracing.propagation.Format.Builtin.TEXT_MAP_INJECT;
+import static io.opentracing.propagation.Format.Builtin.TEXT_MAP_EXTRACT;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -123,7 +124,7 @@ public final class SQSTracing {
 
         if (spanContext != null) {
             final Map<String, String> contextMap = new HashMap<>();
-            tracer.inject(spanContext, TEXT_MAP, new TextMapInjectAdapter(contextMap));
+            tracer.inject(spanContext, TEXT_MAP_INJECT, new TextMapInjectAdapter(contextMap));
             request.addMessageAttributesEntry(
                 attributeKey,
                 new com.amazonaws.services.sqs.model.MessageAttributeValue()
@@ -157,7 +158,7 @@ public final class SQSTracing {
 
         if (spanContext != null) {
             final Map<String, String> contextMap = new HashMap<>();
-            tracer.inject(spanContext, TEXT_MAP, new TextMapInjectAdapter(contextMap));
+            tracer.inject(spanContext, TEXT_MAP_INJECT, new TextMapInjectAdapter(contextMap));
             request.addMessageAttributesEntry(
                 attributeKey,
                 new com.amazonaws.services.sqs.model.MessageAttributeValue()
@@ -213,7 +214,7 @@ public final class SQSTracing {
 
         if (spanContext != null) {
             final Map<String, String> contextMap = new HashMap<>();
-            tracer.inject(spanContext, TEXT_MAP, new TextMapInjectAdapter(contextMap));
+            tracer.inject(spanContext, TEXT_MAP_INJECT, new TextMapInjectAdapter(contextMap));
             request.getEntries().forEach(entry ->
                 entry.addMessageAttributesEntry(
                     attributeKey,
@@ -425,7 +426,7 @@ public final class SQSTracing {
         if (activate) {
             // it does not make sense to finish the span on close,
             // because it will get transferred to another system via the queue for finishing.
-            tracer.scopeManager().activate(span, false);
+            tracer.scopeManager().activate(span);
         }
 
         return span;
@@ -443,7 +444,7 @@ public final class SQSTracing {
      */
     private Optional<SpanContext> safeExtract(final Map<String, String> contextMap) {
         try {
-            return Optional.ofNullable(tracer.extract(TEXT_MAP, new TextMapExtractAdapter(contextMap)));
+            return Optional.ofNullable(tracer.extract(TEXT_MAP_EXTRACT, new TextMapExtractAdapter(contextMap)));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
@@ -481,7 +482,7 @@ public final class SQSTracing {
 
         final Map<String, MessageAttributeValue> tracedAttributes = new HashMap<>(attributes);
         final Map<String, String> contextMap = new HashMap<>();
-        tracer.inject(spanContext, TEXT_MAP, new TextMapInjectAdapter(contextMap));
+        tracer.inject(spanContext, TEXT_MAP_INJECT, new TextMapInjectAdapter(contextMap));
         tracedAttributes.put(attributeKey,
             MessageAttributeValue.builder().dataType(STRING_DATA_TYPE).stringValue(jsonEncode(contextMap)).build());
 
