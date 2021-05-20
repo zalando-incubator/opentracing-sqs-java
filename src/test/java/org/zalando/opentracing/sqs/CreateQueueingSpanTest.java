@@ -17,8 +17,8 @@ public class CreateQueueingSpanTest {
 
     @Test
     public void spanMustBeCreatedCorrectlyWithParentSpan() {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final MockSpan parent = (MockSpan) mockTracer.activeSpan();
         final MockSpan span = (MockSpan) new SQSTracing(mockTracer)

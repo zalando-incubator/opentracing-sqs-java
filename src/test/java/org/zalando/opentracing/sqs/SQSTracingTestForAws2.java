@@ -39,8 +39,8 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustLeaveRequestUnchangedForNullContext() {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final SendMessageRequest request = request();
         final SendMessageRequest traced = new SQSTracing(mockTracer).injectInto(request, null);
@@ -50,8 +50,8 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustAddSpanContextToSingleMessage() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").ignoreActiveSpan().start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final String customName = "span_context";
 
@@ -78,7 +78,7 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustAddExplicitSpanContextToSingleMessage() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
         final Span inactive = mockTracer.buildSpan("bleep").start()
             .setBaggageItem("baggage-key", "bleep-value");
@@ -118,8 +118,8 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustAddSpanContextToBatchEntry() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final SendMessageBatchRequestEntry request = entry();
         final SendMessageBatchRequestEntry traced = new SQSTracing(mockTracer)
@@ -153,7 +153,7 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustLeaveBatchRequestUnchangedForNullContext() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
 
         final SendMessageBatchRequest request = batch();
@@ -164,7 +164,7 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustAddSpanContextToWholeMessageBatch() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
         final Span inactive = mockTracer.buildSpan("bleep").start()
             .setBaggageItem("baggage-key", "bleep-value");
@@ -201,8 +201,8 @@ public class SQSTracingTestForAws2 {
 
     @Test
     public void producerMustAddExplicitSpanContextToWholeMessageBatch() {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final SendMessageBatchRequest request = batch();
         final SendMessageBatchRequest traced = new SQSTracing(mockTracer).injectInto(request);

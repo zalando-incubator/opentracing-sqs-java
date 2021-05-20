@@ -39,7 +39,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustLeaveRequestUnchangedForNullSpanContext() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
 
         final SendMessageRequest request = request();
@@ -51,8 +51,8 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddSpanContextToSingleMessage() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final String customName = "span_context";
 
@@ -83,7 +83,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddExplicitSpanContextToSingleMessage() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
         final Span inactive = mockTracer.buildSpan("bleep").start()
             .setBaggageItem("baggage-key", "bleep-value");
@@ -118,7 +118,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustLeaveBatchEntryUnchangedForNullSpanContext() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
 
         final SendMessageBatchRequestEntry entry = entry();
@@ -131,8 +131,8 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddSpanContextToBatchEntry() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final SendMessageBatchRequestEntry request = entry();
         final SendMessageBatchRequestEntry tracedRequest = new SQSTracing(mockTracer)
@@ -161,7 +161,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddExplicitSpanContextToBatchEntry() throws IOException {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
         final Span inactive = mockTracer.buildSpan("bleep").start()
             .setBaggageItem("baggage-key", "bleep-value");
@@ -197,7 +197,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustLeaveBatchRequestUnchangedForNullSpanContext() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
 
         final SendMessageBatchRequest request = batch();
@@ -226,8 +226,8 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddSpanContextToWholeMessageBatch() {
-        mockTracer.buildSpan("meep").startActive(true).span()
-            .setBaggageItem("baggage-key", "baggage-value");
+        mockTracer.activateSpan(mockTracer.buildSpan("meep").start()
+                .setBaggageItem("baggage-key", "baggage-value"));
 
         final SendMessageBatchRequest request = batch();
         final SendMessageBatchRequest tracedRequest = new SQSTracing(mockTracer).injectInto(request);
@@ -261,7 +261,7 @@ public class SQSTracingTest {
 
     @Test
     public void producerMustAddExplicitSpanContextToWholeMessageBatch() {
-        mockTracer.buildSpan("meep").startActive(true).span()
+        mockTracer.buildSpan("meep").start()
             .setBaggageItem("baggage-key", "baggage-value");
         final Span inactive = mockTracer.buildSpan("bleep").start()
             .setBaggageItem("baggage-key", "bleep-value");
