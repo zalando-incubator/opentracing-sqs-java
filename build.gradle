@@ -53,6 +53,10 @@ checkstyle {
     configFile = new File(rootDir, "checkstyle.xml")
 }
 
+jacoco {
+    toolVersion = "0.8.6"
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
